@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Head from "next/head"; // for SEO metadata
+import { Analytics } from "@vercel/analytics/next"
 import { motion } from "framer-motion";
 import {
   Check,
