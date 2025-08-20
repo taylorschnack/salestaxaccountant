@@ -116,19 +116,18 @@ function LeadForm() {
             Thanks! We just received your note and will reply within one business day.
           </div>
         ) : (
-          <>
-            <Input placeholder="Name" aria-label="Name" autoComplete="off" data-lpignore="true" data-1p-ignore data-bwignore="true" />
-            <Input type="email" placeholder="Work email" aria-label="Work email" autoComplete="email" inputMode="email" data-lpignore="true" data-1p-ignore data-bwignore="true" />
-            <Input placeholder="Company" aria-label="Company" autoComplete="off" data-lpignore="true" data-1p-ignore data-bwignore="true" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <Input placeholder="States (e.g., CA, TX, NY)" aria-label="States of operation" autoComplete="off" data-lpignore="true" data-1p-ignore data-bwignore="true" />
-              <Input placeholder="Annual revenue (approx.)" aria-label="Annual revenue" autoComplete="off" data-lpignore="true" data-1p-ignore data-bwignore="true" />
-            </div>
-            <Textarea rows={4} placeholder="What challenge can we help with?" aria-label="Message" />
-            <Button className="w-full" onClick={() => setSent(true)}>
-              Send request <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </>
+          <form
+  action="https://formspree.io/f/manbgjvk"
+  method="POST"
+  className="space-y-4"
+>
+  <Input type="text" name="name" placeholder="Your Name" required />
+  <Input type="email" name="email" placeholder="Your Email" required />
+  <Input type="company" name="company" placeholder="Your Company Name" required />
+  <Textarea name="message" placeholder="Tell us about your sales tax situation" required />
+  <Button type="submit">Send</Button>
+</form>
+
         )}
         <p className="text-xs text-slate-500">We never share your info.</p>
       </CardContent>
@@ -263,7 +262,7 @@ export default function SalesTaxAccountantSite() {
             <div className="grid grid-cols-3 gap-4 mt-8">
               <Stat label="Years in practice" value="14+" />
               <Stat label="States covered" value="45+" />
-              <Stat label="Avg. refund ROI" value="3–10×" />
+              <Stat label="Avg. reverse sales/use tax refund ROI" value="3–10×" />
             </div>
           </div>
           <Card className="border-0 shadow-xl">
