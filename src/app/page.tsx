@@ -1,40 +1,34 @@
 "use client";
 
 import React, { useState } from "react";
-import Head from "next/head"; // for SEO metadata
-import { Analytics } from "@vercel/analytics/next"
 import { motion } from "framer-motion";
 import {
   Check,
   ChevronRight,
   Mail,
-  Phone,
   MapPin,
+  MessageSquare,
   ShieldCheck,
   Layers,
-  MessageSquare,
   Calculator,
   BadgeCheck,
-  ArrowRight,
   Flag,
   FileText,
   FileSpreadsheet,
   Building2,
   BookOpen,
-  Download
+  Download,
+  Menu,
+  X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 /**
- * SalesTaxAccountant.com — Branded MVP Site with SEO
- * Adds: Head meta, Open Graph, Twitter, canonical, JSON‑LD (Organization, WebSite, Service, FAQPage),
- * semantic landmarks, accessible alt text, and internal anchor links.
+ * SalesTaxAccountant.com — Branded MVP Site
+ * Professional sales & use tax consulting landing page with lead generation.
  */
 
 function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
@@ -106,6 +100,37 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 function LeadForm() {
   const [sent, setSent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("https://formspree.io/f/manbgjvk", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setSent(true);
+        form.reset();
+      } else {
+        alert("There was a problem submitting your form. Please try again.");
+      }
+    } catch {
+      alert("There was a problem submitting your form. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <Card className="border-0 shadow-lg">
       <CardHeader className="pb-2">
@@ -117,18 +142,15 @@ function LeadForm() {
             Thanks! We just received your note and will reply within one business day.
           </div>
         ) : (
-          <form
-  action="https://formspree.io/f/manbgjvk"
-  method="POST"
-  className="space-y-4"
->
-  <Input type="text" name="name" placeholder="Your Name" required />
-  <Input type="email" name="email" placeholder="Your Email" required />
-  <Input type="company" name="company" placeholder="Your Company Name" required />
-  <Textarea name="message" placeholder="Tell us about your sales tax situation" required />
-  <Button type="submit">Send</Button>
-</form>
-
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input type="text" name="name" placeholder="Your Name" required />
+            <Input type="email" name="email" placeholder="Your Email" required />
+            <Input type="text" name="company" placeholder="Your Company Name" required />
+            <Textarea name="message" placeholder="Tell us about your sales tax situation" required />
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Sending..." : "Send"}
+            </Button>
+          </form>
         )}
         <p className="text-xs text-slate-500">We never share your info.</p>
       </CardContent>
@@ -136,77 +158,78 @@ function LeadForm() {
   );
 }
 
-export default function SalesTaxAccountantSite() {
-  const orgLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "SalesTaxAccountant.com",
-    url: "https://www.salestaxaccountant.com",
-    logo: "https://www.salestaxaccountant.com/favicon.png",
-    sameAs: ["https://www.linkedin.com/company/salestaxaccountant"],
-  };
+function LeadMagnetForm() {
+  const [sent, setSent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const webSiteLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "SalesTaxAccountant.com",
-    url: "https://www.salestaxaccountant.com",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: "https://www.salestaxaccountant.com/?q={search_term_string}",
-      "query-input": "required name=search_term_string",
-    },
-  };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  const serviceLd = {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    name: "Sales & Use Tax Consulting",
-    url: "https://www.salestaxaccountant.com#services",
-    areaServed: "US",
-    serviceType: [
-      "Nexus & Exposure Study",
-      "Registration & Onboarding",
-      "Product Taxability Matrix",
-      "Audit Support",
-      "Voluntary Disclosures (VDAs)",
-      "Sales Tax Systems & Controls",
-    ],
-    provider: { "@type": "Organization", name: "SalesTaxAccountant.com" },
-  };
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQS.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
+    // Add a marker to identify this as a lead magnet request
+    formData.append("message", "Lead Magnet Request: Sales Tax Nexus Checklist");
+
+    try {
+      const response = await fetch("https://formspree.io/f/manbgjvk", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setSent(true);
+        form.reset();
+      } else {
+        alert("There was a problem submitting your request. Please try again.");
+      }
+    } catch {
+      alert("There was a problem submitting your request. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className={`${inter.variable} font-sans min-h-screen bg-white text-slate-900`}>
-      <Head>
-        <title>SalesTaxAccountant.com | Sales Tax Confidence for Growing Businesses</title>
-        <meta name="description" content="Practical multistate sales & use tax help for online sellers, SaaS, and retailers — nexus, taxability, registration, audits, and disclosures — delivered in plain language with audit‑ready support." />
-        <meta name="keywords" content="sales tax, nexus study, voluntary disclosure, VDA, sales tax registration, audit defense, multistate compliance" />
-        <meta name="robots" content="index,follow" />
-        <meta property="og:title" content="SalesTaxAccountant.com | Sales Tax Confidence" />
-        <meta property="og:description" content="Simplify multistate sales tax. From nexus and taxability to audits and disclosures, we deliver audit‑ready, plain‑language solutions." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.salestaxaccountant.com" />
-        <meta property="og:image" content="/og-image.png" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="SalesTaxAccountant.com | Sales Tax Confidence" />
-        <meta name="twitter:description" content="Sales tax confidence, built for audit‑ready teams." />
-        <meta name="twitter:image" content="/og-image.png" />
-        <link rel="canonical" href="https://www.salestaxaccountant.com" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteLd) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      </Head>
+    <div className="rounded-2xl border p-10 bg-gradient-to-br from-indigo-50 to-emerald-50">
+      <BookOpen className="mx-auto h-10 w-10 text-indigo-600" />
+      <h2 className="text-2xl md:text-3xl font-bold mt-4">Free Guide: Sales Tax Nexus Checklist</h2>
+      <p className="text-slate-600 mt-2">Download our practical checklist to see if your business has obligations in other states.</p>
+
+      {sent ? (
+        <div className="mt-6 max-w-md mx-auto rounded-xl p-4 bg-emerald-50 text-emerald-900 text-sm">
+          Thanks! Check your email for the Sales Tax Nexus Checklist PDF.
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="mt-6 max-w-md mx-auto grid gap-3">
+          <Input
+            type="email"
+            name="email"
+            placeholder="Your email"
+            aria-label="Email"
+            required
+          />
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            <Download className="mr-2 h-4 w-4" />
+            {isSubmitting ? "Sending..." : "Get the guide"}
+          </Button>
+        </form>
+      )}
+
+      <p className="text-xs text-slate-500 mt-2">We&apos;ll email you the PDF and occasional updates. Unsubscribe anytime.</p>
+    </div>
+  );
+}
+
+export default function SalesTaxAccountantSite() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  return (
+    <div className="font-sans min-h-screen bg-white text-slate-900">
 
       {/* Decorative gradient backdrop */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
@@ -230,10 +253,71 @@ export default function SalesTaxAccountantSite() {
             <a href="#faq" className="hover:text-slate-900 text-slate-600">FAQ</a>
             <a href="#contact" className="hover:text-slate-900 text-slate-600">Contact</a>
           </nav>
-          <Button asChild className="hidden md:inline-flex">
-            <a href="#contact">Get started</a>
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button asChild className="hidden md:inline-flex">
+              <a href="#contact">Get started</a>
+            </Button>
+            <button
+              className="md:hidden p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden border-t bg-white"
+          >
+            <nav className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-3" aria-label="Mobile navigation">
+              <a
+                href="#services"
+                className="px-3 py-2 hover:bg-slate-100 rounded-lg text-slate-700"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Services
+              </a>
+              <a
+                href="#approach"
+                className="px-3 py-2 hover:bg-slate-100 rounded-lg text-slate-700"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Approach
+              </a>
+              <a
+                href="#industries"
+                className="px-3 py-2 hover:bg-slate-100 rounded-lg text-slate-700"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Who we serve
+              </a>
+              <a
+                href="#faq"
+                className="px-3 py-2 hover:bg-slate-100 rounded-lg text-slate-700"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                FAQ
+              </a>
+              <a
+                href="#contact"
+                className="px-3 py-2 hover:bg-slate-100 rounded-lg text-slate-700"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
+              </a>
+              <Button asChild className="mt-2">
+                <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Get started</a>
+              </Button>
+            </nav>
+          </motion.div>
+        )}
       </header>
 
       {/* Hero */}
@@ -355,12 +439,11 @@ export default function SalesTaxAccountantSite() {
       <section id="contact" className="max-w-6xl mx-auto px-4 py-16">
         <div className="grid md:grid-cols-2 gap-10">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold">Let’s get your sales tax under control</h2>
-            <p className="text-slate-600 mt-2">Tell us a bit about your situation. We’ll propose a right‑sized plan—no bloat, just the work that matters.</p>
+            <h2 className="text-2xl md:text-3xl font-bold">Let&apos;s get your sales tax under control</h2>
+            <p className="text-slate-600 mt-2">Tell us a bit about your situation. We&apos;ll propose a right‑sized plan—no bloat, just the work that matters.</p>
             <div className="mt-6 space-y-2 text-sm text-slate-700">
               <div className="flex items-center gap-2"><Mail className="h-4 w-4"/> hello@salestaxaccountant.com</div>
-              <div className="flex items-center gap-2"><Phone className="h-4 w-4"/> (555) 555‑0153</div>
-              <div className="flex items-start gap-2"><MessageSquare className="h-4 w-4 mt-1"/> Prefer a quick chat? Add a note in the form and we’ll send a booking link.</div>
+              <div className="flex items-start gap-2"><MessageSquare className="h-4 w-4 mt-1"/> Prefer a quick chat? Add a note in the form and we&apos;ll send a booking link.</div>
             </div>
           </div>
           <LeadForm />
@@ -398,18 +481,9 @@ export default function SalesTaxAccountantSite() {
         </div>
       </section>
 
-      {/* Lead Magnet Section (new) */}
-      <section id="leadmagnet" className="max-w-6xl mx-auto px-4 py-16 text-center" suppressHydrationWarning>
-        <div className="rounded-2xl border p-10 bg-gradient-to-br from-indigo-50 to-emerald-50">
-          <BookOpen className="mx-auto h-10 w-10 text-indigo-600" />
-          <h2 className="text-2xl md:text-3xl font-bold mt-4">Free Guide: Sales Tax Nexus Checklist</h2>
-          <p className="text-slate-600 mt-2">Download our practical checklist to see if your business has obligations in other states.</p>
-          <form className="mt-6 max-w-md mx-auto grid gap-3" autoComplete="off" data-lpignore="true" data-1p-ignore data-bwignore="true" data-form-type="other" suppressHydrationWarning>
-            <Input type="email" placeholder="Your email" aria-label="Email" autoComplete="email" inputMode="email" required data-lpignore="true" data-1p-ignore data-bwignore="true" />
-            <Button className="w-full"><Download className="mr-2 h-4 w-4"/> Get the guide</Button>
-          </form>
-          <p className="text-xs text-slate-500 mt-2">We’ll email you the PDF and occasional updates. Unsubscribe anytime.</p>
-        </div>
+      {/* Lead Magnet Section */}
+      <section id="leadmagnet" className="max-w-6xl mx-auto px-4 py-16 text-center">
+        <LeadMagnetForm />
       </section>
 
       {/* Footer */}
