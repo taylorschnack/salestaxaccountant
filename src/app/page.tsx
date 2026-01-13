@@ -36,12 +36,12 @@ function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
     <svg className={className} viewBox="0 0 64 64" role="img" aria-label="SalesTaxAccountant.com logo">
       <defs>
         <linearGradient id="g" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0%" stopColor="#4F46E5" />
-          <stop offset="100%" stopColor="#059669" />
+          <stop offset="0%" stopColor="#1e3a8a" />
+          <stop offset="100%" stopColor="#0f766e" />
         </linearGradient>
       </defs>
       <rect x="6" y="6" rx="14" ry="14" width="52" height="52" fill="url(#g)" />
-      <path d="M22 24c0-1.1.9-2 2-2h12.6c.5 0 1 .2 1.4.6l8.4 8.4c.8.8.8 2 0 2.8L39 41.6c-.4.4-.9.6-1.4.6H25c-1.1 0-2-.9-2-2V24z" fill="#EC4899" />
+      <path d="M22 24c0-1.1.9-2 2-2h12.6c.5 0 1 .2 1.4.6l8.4 8.4c.8.8.8 2 0 2.8L39 41.6c-.4.4-.9.6-1.4.6H25c-1.1 0-2-.9-2-2V24z" fill="#d97706" />
       <circle cx="28.5" cy="28.5" r="2" fill="#fff" />
       <g fill="#fff" transform="translate(33 28)">
         <circle cx="2" cy="2" r="2" />
@@ -52,11 +52,11 @@ function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
 }
 
 const BRAND = {
-  gradient: "bg-gradient-to-br from-indigo-600 to-emerald-600",
-  gradientText: "bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-emerald-500",
-  indigo: "text-indigo-600",
-  emerald: "text-emerald-600",
-  pink: "text-pink-500",
+  gradient: "bg-gradient-to-br from-blue-900 to-teal-700",
+  gradientText: "bg-clip-text text-transparent bg-gradient-to-r from-blue-900 to-teal-700",
+  navy: "text-blue-900",
+  teal: "text-teal-700",
+  gold: "text-amber-600",
 };
 
 const FEATURES = [
@@ -92,7 +92,7 @@ const FAQS = [
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="text-center p-4">
-      <div className={`text-3xl font-semibold ${BRAND.gradientText}`}>{value}</div>
+      <div className={`text-3xl font-semibold ${BRAND.gold}`}>{value}</div>
       <div className="text-sm text-slate-600">{label}</div>
     </div>
   );
@@ -138,7 +138,7 @@ function LeadForm() {
       </CardHeader>
       <CardContent className="grid gap-3">
         {sent ? (
-          <div className="rounded-xl p-4 bg-emerald-50 text-emerald-900 text-sm">
+          <div className="rounded-xl p-4 bg-teal-50 text-teal-900 text-sm border border-teal-200">
             Thanks! We just received your note and will reply within one business day.
           </div>
         ) : (
@@ -147,7 +147,7 @@ function LeadForm() {
             <Input type="email" name="email" placeholder="Your Email" required />
             <Input type="text" name="company" placeholder="Your Company Name" required />
             <Textarea name="message" placeholder="Tell us about your sales tax situation" required />
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} className="bg-blue-900 hover:bg-teal-700">
               {isSubmitting ? "Sending..." : "Send"}
             </Button>
           </form>
@@ -195,13 +195,16 @@ function LeadMagnetForm() {
   };
 
   return (
-    <div className="rounded-2xl border p-10 bg-gradient-to-br from-indigo-50 to-emerald-50">
-      <BookOpen className="mx-auto h-10 w-10 text-indigo-600" />
-      <h2 className="text-2xl md:text-3xl font-bold mt-4">Free Guide: Sales Tax Nexus Checklist</h2>
+    <div className="rounded-2xl border p-10 bg-gradient-to-br from-blue-50 to-teal-50">
+      <BookOpen className="mx-auto h-10 w-10 text-amber-600" />
+      <h2 className="text-2xl md:text-3xl font-bold mt-4">
+        <span className="text-blue-900">Free Guide: </span>
+        <span className="text-teal-700">Sales Tax Nexus Checklist</span>
+      </h2>
       <p className="text-slate-600 mt-2">Download our practical checklist to see if your business has obligations in other states.</p>
 
       {sent ? (
-        <div className="mt-6 max-w-md mx-auto rounded-xl p-4 bg-emerald-50 text-emerald-900 text-sm">
+        <div className="mt-6 max-w-md mx-auto rounded-xl p-4 bg-teal-50 text-teal-900 text-sm border border-teal-200">
           Thanks! Check your email for the Sales Tax Nexus Checklist PDF.
         </div>
       ) : (
@@ -213,7 +216,7 @@ function LeadMagnetForm() {
             aria-label="Email"
             required
           />
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+          <Button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white" disabled={isSubmitting}>
             <Download className="mr-2 h-4 w-4" />
             {isSubmitting ? "Sending..." : "Get the guide"}
           </Button>
@@ -233,8 +236,8 @@ export default function SalesTaxAccountantSite() {
 
       {/* Decorative gradient backdrop */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        <div className="absolute -top-24 -left-24 h-[32rem] w-[32rem] rounded-full blur-3xl opacity-30 bg-gradient-to-tr from-indigo-500 to-emerald-400" />
-        <div className="absolute -bottom-32 -right-24 h-[28rem] w-[28rem] rounded-full blur-3xl opacity-20 bg-gradient-to-tr from-pink-400 to-indigo-500" />
+        <div className="absolute -top-24 -left-24 h-[32rem] w-[32rem] rounded-full blur-3xl opacity-20 bg-gradient-to-tr from-blue-900 to-teal-600" />
+        <div className="absolute -bottom-32 -right-24 h-[28rem] w-[28rem] rounded-full blur-3xl opacity-15 bg-gradient-to-tr from-teal-700 to-blue-900" />
       </div>
 
       {/* Header */}
@@ -254,7 +257,7 @@ export default function SalesTaxAccountantSite() {
             <a href="#contact" className="hover:text-slate-900 text-slate-600">Contact</a>
           </nav>
           <div className="flex items-center gap-3">
-            <Button asChild className="hidden md:inline-flex">
+            <Button asChild className="hidden md:inline-flex bg-blue-900 hover:bg-teal-700">
               <a href="#contact">Get started</a>
             </Button>
             <button
@@ -312,7 +315,7 @@ export default function SalesTaxAccountantSite() {
               >
                 Contact
               </a>
-              <Button asChild className="mt-2">
+              <Button asChild className="mt-2 bg-blue-900 hover:bg-teal-700">
                 <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Get started</a>
               </Button>
             </nav>
@@ -336,13 +339,13 @@ export default function SalesTaxAccountantSite() {
               Practical multistate sales & use tax help for online sellers, SaaS, and retailers — nexus, taxability, registration, audits, and disclosures — delivered in plain language with audit‑ready support.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild size="lg"><a href="#contact">Book a consult</a></Button>
+              <Button asChild size="lg" className="bg-blue-900 hover:bg-teal-700"><a href="#contact">Book a consult</a></Button>
               <Button variant="outline" asChild size="lg"><a href="#services">Explore services</a></Button>
             </div>
             <nav aria-label="Quick links" className="mt-6 text-sm">
-              <a href="#services" className="text-indigo-600 hover:underline mr-4">Services</a>
-              <a href="#faq" className="text-indigo-600 hover:underline mr-4">FAQs</a>
-              <a href="#contact" className="text-indigo-600 hover:underline">Contact</a>
+              <a href="#services" className="text-blue-900 hover:underline mr-4">Services</a>
+              <a href="#faq" className="text-blue-900 hover:underline mr-4">FAQs</a>
+              <a href="#contact" className="text-blue-900 hover:underline">Contact</a>
             </nav>
             <div className="grid grid-cols-3 gap-4 mt-8">
               <Stat label="Years in practice" value="14+" />
@@ -357,7 +360,7 @@ export default function SalesTaxAccountantSite() {
             <CardContent className="grid gap-3">
               {FEATURES.map((f, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <div className={`mt-0.5 ${BRAND.indigo}`}>{f.icon}</div>
+                  <div className={`mt-0.5 ${BRAND.navy}`}>{f.icon}</div>
                   <div>
                     <div className="font-medium">{f.title}</div>
                     <div className="text-sm text-slate-600">{f.text}</div>
@@ -375,10 +378,10 @@ export default function SalesTaxAccountantSite() {
         <p className="text-slate-600 mt-2 max-w-2xl">Pick the lane you need now; add on as you grow. Every engagement includes documentation you can hand to auditors and future staff.</p>
         <div className="grid md:grid-cols-3 gap-6 mt-8">
           {SERVICES.map((s, i) => (
-            <Card key={i} className="hover:shadow-lg transition-shadow">
+            <Card key={i} className="hover:shadow-lg hover:border-teal-700 transition-all">
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-3">
-                  <div className={`${BRAND.emerald}`}>{s.icon}</div>
+                  <div className={`${BRAND.teal}`}>{s.icon}</div>
                   <CardTitle className="text-base">{s.title}</CardTitle>
                 </div>
               </CardHeader>
@@ -472,11 +475,11 @@ export default function SalesTaxAccountantSite() {
         <div className="grid md:grid-cols-2 gap-6 mt-6">
           <Card>
             <CardHeader><CardTitle className="text-base">Sales Tax 101 for Online Sellers</CardTitle></CardHeader>
-            <CardContent className="text-sm text-slate-600">A beginner’s guide to understanding nexus, thresholds, and registrations. <a href="#" className="text-indigo-600 hover:underline">Read more</a></CardContent>
+            <CardContent className="text-sm text-slate-600">A beginner’s guide to understanding nexus, thresholds, and registrations. <a href="#" className="text-blue-900 hover:underline">Read more</a></CardContent>
           </Card>
           <Card>
             <CardHeader><CardTitle className="text-base">5 Common Mistakes in Sales Tax Compliance</CardTitle></CardHeader>
-            <CardContent className="text-sm text-slate-600">Avoid costly errors in multi-state taxability and filings. <a href="#" className="text-indigo-600 hover:underline">Read more</a></CardContent>
+            <CardContent className="text-sm text-slate-600">Avoid costly errors in multi-state taxability and filings. <a href="#" className="text-blue-900 hover:underline">Read more</a></CardContent>
           </Card>
         </div>
       </section>
