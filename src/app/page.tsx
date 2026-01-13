@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { track } from "@vercel/analytics";
 import {
   Check,
   ChevronRight,
@@ -109,6 +110,12 @@ function LeadForm() {
     const form = e.currentTarget;
     const formData = new FormData(form);
 
+    // Track form submission attempt
+    track("Lead Form Started", {
+      formType: "consultation",
+      location: "page"
+    });
+
     try {
       const response = await fetch("https://formspree.io/f/manbgjvk", {
         method: "POST",
@@ -121,11 +128,24 @@ function LeadForm() {
       if (response.ok) {
         setSent(true);
         form.reset();
+        // Track successful submission
+        track("Lead Form Submitted", {
+          formType: "consultation",
+          location: "page"
+        });
       } else {
         alert("There was a problem submitting your form. Please try again.");
+        track("Lead Form Error", {
+          formType: "consultation",
+          error: "submission_failed"
+        });
       }
     } catch {
       alert("There was a problem submitting your form. Please try again.");
+      track("Lead Form Error", {
+        formType: "consultation",
+        error: "network_error"
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -172,6 +192,11 @@ function LeadMagnetForm() {
     // Add a marker to identify this as a lead magnet request
     formData.append("message", "Lead Magnet Request: Sales Tax Nexus Checklist");
 
+    // Track lead magnet request
+    track("Lead Magnet Started", {
+      type: "nexus_checklist"
+    });
+
     try {
       const response = await fetch("https://formspree.io/f/manbgjvk", {
         method: "POST",
@@ -184,11 +209,23 @@ function LeadMagnetForm() {
       if (response.ok) {
         setSent(true);
         form.reset();
+        // Track successful lead magnet download
+        track("Lead Magnet Downloaded", {
+          type: "nexus_checklist"
+        });
       } else {
         alert("There was a problem submitting your request. Please try again.");
+        track("Lead Magnet Error", {
+          type: "nexus_checklist",
+          error: "submission_failed"
+        });
       }
     } catch {
       alert("There was a problem submitting your request. Please try again.");
+      track("Lead Magnet Error", {
+        type: "nexus_checklist",
+        error: "network_error"
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -258,7 +295,7 @@ export default function SalesTaxAccountantSite() {
           </nav>
           <div className="flex items-center gap-3">
             <Button asChild className="hidden md:inline-flex bg-blue-900 hover:bg-teal-700">
-              <a href="#contact">Get started</a>
+              <a href="#contact" onClick={() => track("CTA Click", { button: "get_started", location: "header" })}>Get started</a>
             </Button>
             <button
               className="md:hidden p-2 hover:bg-slate-100 rounded-lg transition-colors"
@@ -316,7 +353,7 @@ export default function SalesTaxAccountantSite() {
                 Contact
               </a>
               <Button asChild className="mt-2 bg-blue-900 hover:bg-teal-700">
-                <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Get started</a>
+                <a href="#contact" onClick={() => { setMobileMenuOpen(false); track("CTA Click", { button: "get_started", location: "mobile_menu" }); }}>Get started</a>
               </Button>
             </nav>
           </motion.div>
@@ -339,8 +376,12 @@ export default function SalesTaxAccountantSite() {
               Practical multistate sales & use tax help for online sellers, SaaS, and retailers — nexus, taxability, registration, audits, and disclosures — delivered in plain language with audit‑ready support.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="bg-blue-900 hover:bg-teal-700"><a href="#contact">Book a consult</a></Button>
-              <Button variant="outline" asChild size="lg"><a href="#services">Explore services</a></Button>
+              <Button asChild size="lg" className="bg-blue-900 hover:bg-teal-700">
+                <a href="#contact" onClick={() => track("CTA Click", { button: "book_consult", location: "hero" })}>Book a consult</a>
+              </Button>
+              <Button variant="outline" asChild size="lg">
+                <a href="#services" onClick={() => track("CTA Click", { button: "explore_services", location: "hero" })}>Explore services</a>
+              </Button>
             </div>
             <nav aria-label="Quick links" className="mt-6 text-sm">
               <a href="#services" className="text-blue-900 hover:underline mr-4">Services</a>
@@ -378,7 +419,14 @@ export default function SalesTaxAccountantSite() {
         <p className="text-slate-600 mt-2 max-w-2xl">Pick the lane you need now; add on as you grow. Every engagement includes documentation you can hand to auditors and future staff.</p>
         <div className="grid md:grid-cols-3 gap-6 mt-8">
           {SERVICES.map((s, i) => (
-            <Card key={i} className="hover:shadow-lg hover:border-teal-700 transition-all">
+            <Card
+              key={i}
+              className="hover:shadow-lg hover:border-teal-700 transition-all cursor-pointer"
+              onClick={() => track("Service Card Click", {
+                service: s.title.toLowerCase().replace(/\s+/g, "_"),
+                position: i + 1
+              })}
+            >
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-3">
                   <div className={`${BRAND.teal}`}>{s.icon}</div>
@@ -390,7 +438,11 @@ export default function SalesTaxAccountantSite() {
           ))}
         </div>
         <div className="mt-6">
-          <Button asChild variant="outline"><a href="#contact" className="">Get pricing & availability <ChevronRight className="ml-1 h-4 w-4" /></a></Button>
+          <Button asChild variant="outline">
+            <a href="#contact" onClick={() => track("CTA Click", { button: "get_pricing", location: "services_section" })}>
+              Get pricing & availability <ChevronRight className="ml-1 h-4 w-4" />
+            </a>
+          </Button>
         </div>
       </section>
 
@@ -430,7 +482,14 @@ export default function SalesTaxAccountantSite() {
         <h2 className="text-2xl md:text-3xl font-bold">FAQ</h2>
         <div className="mt-6 space-y-4">
           {FAQS.map((f, i) => (
-            <Card key={i} className="border-0 shadow-sm">
+            <Card
+              key={i}
+              className="border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => track("FAQ Click", {
+                question: f.q.substring(0, 50),
+                position: i + 1
+              })}
+            >
               <CardHeader className="pb-2"><CardTitle className="text-base">{f.q}</CardTitle></CardHeader>
               <CardContent className="text-sm text-slate-600">{f.a}</CardContent>
             </Card>
@@ -475,11 +534,11 @@ export default function SalesTaxAccountantSite() {
         <div className="grid md:grid-cols-2 gap-6 mt-6">
           <Card>
             <CardHeader><CardTitle className="text-base">Sales Tax 101 for Online Sellers</CardTitle></CardHeader>
-            <CardContent className="text-sm text-slate-600">A beginner’s guide to understanding nexus, thresholds, and registrations. <a href="#" className="text-blue-900 hover:underline">Read more</a></CardContent>
+            <CardContent className="text-sm text-slate-600">A beginner's guide to understanding nexus, thresholds, and registrations. <a href="#" className="text-blue-900 hover:underline" onClick={(e) => { e.preventDefault(); track("Resource Click", { resource: "sales_tax_101" }); }}>Read more</a></CardContent>
           </Card>
           <Card>
             <CardHeader><CardTitle className="text-base">5 Common Mistakes in Sales Tax Compliance</CardTitle></CardHeader>
-            <CardContent className="text-sm text-slate-600">Avoid costly errors in multi-state taxability and filings. <a href="#" className="text-blue-900 hover:underline">Read more</a></CardContent>
+            <CardContent className="text-sm text-slate-600">Avoid costly errors in multi-state taxability and filings. <a href="#" className="text-blue-900 hover:underline" onClick={(e) => { e.preventDefault(); track("Resource Click", { resource: "common_mistakes" }); }}>Read more</a></CardContent>
           </Card>
         </div>
       </section>
