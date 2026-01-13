@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { track } from "@vercel/analytics";
 import {
@@ -540,6 +541,13 @@ export default function SalesTaxAccountantSite() {
             <CardHeader><CardTitle className="text-base">5 Common Mistakes in Sales Tax Compliance</CardTitle></CardHeader>
             <CardContent className="text-sm text-slate-600">Avoid costly errors in multi-state taxability and filings. <a href="#" className="text-blue-900 hover:underline" onClick={(e) => { e.preventDefault(); track("Resource Click", { resource: "common_mistakes" }); }}>Read more</a></CardContent>
           </Card>
+        </div>
+        <div className="mt-6">
+          <Button asChild variant="outline">
+            <Link href="/blog" onClick={() => track("CTA Click", { button: "view_all_articles", location: "resources_section" })}>
+              View all articles <ChevronRight className="ml-1 h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </section>
 
