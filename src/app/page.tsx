@@ -534,7 +534,7 @@ export default function SalesTaxAccountantSite() {
         <div className="grid md:grid-cols-2 gap-6 mt-6">
           <Card>
             <CardHeader><CardTitle className="text-base">Sales Tax 101 for Online Sellers</CardTitle></CardHeader>
-            <CardContent className="text-sm text-slate-600">A beginner's guide to understanding nexus, thresholds, and registrations. <a href="#" className="text-blue-900 hover:underline" onClick={(e) => { e.preventDefault(); track("Resource Click", { resource: "sales_tax_101" }); }}>Read more</a></CardContent>
+            <CardContent className="text-sm text-slate-600">A beginner&apos;s guide to understanding nexus, thresholds, and registrations. <a href="#" className="text-blue-900 hover:underline" onClick={(e) => { e.preventDefault(); track("Resource Click", { resource: "sales_tax_101" }); }}>Read more</a></CardContent>
           </Card>
           <Card>
             <CardHeader><CardTitle className="text-base">5 Common Mistakes in Sales Tax Compliance</CardTitle></CardHeader>
