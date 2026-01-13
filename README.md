@@ -1,36 +1,153 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SalesTaxAccountant.com
+
+Professional sales & use tax consulting landing page built with Next.js 15, React 19, and Tailwind CSS.
+
+## Overview
+
+This is a modern, responsive marketing website for a B2B sales tax consulting firm. The site features lead generation forms, SEO optimization, structured data for search engines, and a mobile-first design.
+
+## Tech Stack
+
+- **Framework**: Next.js 15.4.10
+- **UI Library**: React 19.1.0
+- **Styling**: Tailwind CSS 4
+- **Components**: shadcn/ui (custom built)
+- **Animations**: Framer Motion 12.23.12
+- **Icons**: Lucide React
+- **Analytics**: Vercel Analytics
+- **Forms**: Formspree integration
+
+## Features
+
+- ✅ **SEO Optimized**: Complete metadata, Open Graph, Twitter Cards, and JSON-LD structured data
+- ✅ **Lead Generation**: Two fully functional contact forms (consultation requests and lead magnet)
+- ✅ **Mobile Navigation**: Responsive hamburger menu with smooth animations
+- ✅ **Modern UI**: Gradient backgrounds, smooth animations, and clean design
+- ✅ **Performance**: Static generation for optimal load times
+- ✅ **Accessibility**: ARIA labels, semantic HTML, keyboard navigation
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── layout.tsx          # Root layout with metadata and SEO
+│   ├── page.tsx            # Main landing page
+│   └── globals.css         # Global styles and Tailwind
+├── components/
+│   └── ui/                 # Reusable UI components (Button, Card, Input, etc.)
+└── lib/
+    └── utils.ts            # Utility functions
+```
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm, yarn, pnpm, or bun
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/taylorschnack/salestaxaccountant.git
+cd salestaxaccountant
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the site in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Create optimized production build
+npm run build
 
-## Learn More
+# Start production server
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Configuration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Forms
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Forms are configured to use Formspree. To connect your own form endpoint:
 
-## Deploy on Vercel
+1. Sign up at [Formspree.io](https://formspree.io)
+2. Create a new form
+3. Update the form endpoint in `src/app/page.tsx`:
+   - `LeadForm` component (line ~119)
+   - `LeadMagnetForm` component (line ~182)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### SEO & Metadata
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Update site metadata in `src/app/layout.tsx`:
+- Page title and description
+- Open Graph images
+- Canonical URL
+- Social media links
+
+### Analytics
+
+Vercel Analytics is integrated. To enable:
+1. Deploy to Vercel
+2. Enable Analytics in your Vercel project settings
+
+## Key Sections
+
+- **Hero**: Value proposition with key statistics
+- **Services**: 6 core service offerings
+- **How We Work**: 5-step process with integrated lead form
+- **Industries**: Target market segments
+- **FAQs**: Common questions with structured data
+- **Contact**: Lead generation form with contact information
+- **About**: Company background and credentials
+- **Resources**: Blog/article preview section
+- **Lead Magnet**: Free guide download form
+
+## Recent Updates
+
+All high-priority fixes implemented:
+- ✅ Fixed SEO metadata (moved to layout.tsx)
+- ✅ Fixed form submission handling with loading states
+- ✅ Implemented mobile navigation menu
+- ✅ Removed placeholder contact information
+- ✅ Connected lead magnet form functionality
+
+## Development
+
+```bash
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Run linting
+npm run lint
+```
+
+## Deployment
+
+This site is optimized for deployment on [Vercel](https://vercel.com):
+
+1. Push your code to GitHub
+2. Import the repository in Vercel
+3. Vercel will automatically detect Next.js and configure the build
+4. Your site will be live with automatic deployments on every push
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/taylorschnack/salestaxaccountant)
+
+## License
+
+All rights reserved © 2026 SalesTaxAccountant.com
+
+## Support
+
+For questions or issues, please contact hello@salestaxaccountant.com
