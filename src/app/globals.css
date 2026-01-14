@@ -120,3 +120,64 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Blog prose styling */
+.prose {
+  @apply text-slate-900;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold text-slate-900 mt-10 mb-4;
+}
+
+.prose h3 {
+  @apply text-xl font-bold text-slate-900 mt-8 mb-3;
+}
+
+.prose h4 {
+  @apply text-lg font-semibold text-slate-900 mt-6 mb-2;
+}
+
+.prose p {
+  @apply text-slate-700 leading-relaxed mb-4;
+}
+
+.prose ul {
+  @apply list-disc pl-6 mb-4 space-y-2;
+}
+
+.prose ol {
+  @apply list-decimal pl-6 mb-4 space-y-2;
+}
+
+.prose li {
+  @apply text-slate-700;
+}
+
+.prose strong {
+  @apply font-semibold text-slate-900;
+}
+
+.prose em {
+  @apply italic text-slate-700;
+}
+
+.prose a {
+  @apply text-blue-900 underline hover:text-teal-700;
+}
+
+.prose code {
+  @apply bg-slate-100 text-slate-900 px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.prose pre {
+  @apply bg-slate-100 p-4 rounded-lg overflow-x-auto mb-4;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-blue-900 pl-4 italic text-slate-600 my-4;
+}
+
+.prose hr {
+  @apply border-slate-200 my-8;
+}
