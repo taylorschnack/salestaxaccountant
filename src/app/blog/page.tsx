@@ -59,10 +59,6 @@ export default function BlogPage() {
               <strong className="text-slate-900">{posts.length}</strong> articles
             </span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <Clock className="h-5 w-5 text-teal-700" />
-            <span className="text-slate-600">Updated weekly</span>
-          </div>
         </div>
       </section>
 

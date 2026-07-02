@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useId } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { track } from "@vercel/analytics";
 import {
   Check,
@@ -34,15 +34,16 @@ import { Textarea } from "@/components/ui/textarea";
  */
 
 function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
+  const gradientId = useId();
   return (
     <svg className={className} viewBox="0 0 64 64" role="img" aria-label="SalesTaxAccountant.com logo">
       <defs>
-        <linearGradient id="g" x1="0" y1="1" x2="1" y2="0">
+        <linearGradient id={gradientId} x1="0" y1="1" x2="1" y2="0">
           <stop offset="0%" stopColor="#1e3a8a" />
           <stop offset="100%" stopColor="#0f766e" />
         </linearGradient>
       </defs>
-      <rect x="6" y="6" rx="14" ry="14" width="52" height="52" fill="url(#g)" />
+      <rect x="6" y="6" rx="14" ry="14" width="52" height="52" fill={`url(#${gradientId})`} />
       <path d="M22 24c0-1.1.9-2 2-2h12.6c.5 0 1 .2 1.4.6l8.4 8.4c.8.8.8 2 0 2.8L39 41.6c-.4.4-.9.6-1.4.6H25c-1.1 0-2-.9-2-2V24z" fill="#d97706" />
       <circle cx="28.5" cy="28.5" r="2" fill="#fff" />
       <g fill="#fff" transform="translate(33 28)">
@@ -103,10 +104,12 @@ function Stat({ label, value }: { label: string; value: string }) {
 function LeadForm() {
   const [sent, setSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -135,14 +138,14 @@ function LeadForm() {
           location: "page"
         });
       } else {
-        alert("There was a problem submitting your form. Please try again.");
+        setError("Something went wrong sending your message. Please try again, or email us at hello@salestaxaccountant.com.");
         track("Lead Form Error", {
           formType: "consultation",
           error: "submission_failed"
         });
       }
     } catch {
-      alert("There was a problem submitting your form. Please try again.");
+      setError("Something went wrong sending your message. Please try again, or email us at hello@salestaxaccountant.com.");
       track("Lead Form Error", {
         formType: "consultation",
         error: "network_error"
@@ -164,16 +167,25 @@ function LeadForm() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
+            <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <Input type="text" name="name" placeholder="Your Name" required />
             <Input type="email" name="email" placeholder="Your Email" required />
             <Input type="text" name="company" placeholder="Your Company Name" required />
             <Textarea name="message" placeholder="Tell us about your sales tax situation" required />
+            {error && (
+              <div className="rounded-xl p-4 bg-red-50 text-red-900 text-sm border border-red-200">
+                {error}
+              </div>
+            )}
             <Button type="submit" disabled={isSubmitting} className="bg-blue-900 hover:bg-teal-700">
               {isSubmitting ? "Sending..." : "Send"}
             </Button>
           </form>
         )}
-        <p className="text-xs text-slate-500">We never share your info.</p>
+        <p className="text-xs text-slate-500">
+          We never share your info.{" "}
+          <Link href="/privacy" className="hover:underline">Privacy Policy</Link>.
+        </p>
       </CardContent>
     </Card>
   );
@@ -182,10 +194,12 @@ function LeadForm() {
 function LeadMagnetForm() {
   const [sent, setSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -215,14 +229,14 @@ function LeadMagnetForm() {
           type: "nexus_checklist"
         });
       } else {
-        alert("There was a problem submitting your request. Please try again.");
+        setError("Something went wrong sending your message. Please try again, or email us at hello@salestaxaccountant.com.");
         track("Lead Magnet Error", {
           type: "nexus_checklist",
           error: "submission_failed"
         });
       }
     } catch {
-      alert("There was a problem submitting your request. Please try again.");
+      setError("Something went wrong sending your message. Please try again, or email us at hello@salestaxaccountant.com.");
       track("Lead Magnet Error", {
         type: "nexus_checklist",
         error: "network_error"
@@ -247,6 +261,7 @@ function LeadMagnetForm() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="mt-6 max-w-md mx-auto grid gap-3">
+          <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
           <Input
             type="email"
             name="email"
@@ -254,6 +269,11 @@ function LeadMagnetForm() {
             aria-label="Email"
             required
           />
+          {error && (
+            <div className="rounded-xl p-4 bg-red-50 text-red-900 text-sm border border-red-200 text-left">
+              {error}
+            </div>
+          )}
           <Button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white" disabled={isSubmitting}>
             <Download className="mr-2 h-4 w-4" />
             {isSubmitting ? "Sending..." : "Get the guide"}
@@ -261,7 +281,10 @@ function LeadMagnetForm() {
         </form>
       )}
 
-      <p className="text-xs text-slate-500 mt-2">We&apos;ll email you the PDF and occasional updates. Unsubscribe anytime.</p>
+      <p className="text-xs text-slate-500 mt-2">
+        We&apos;ll email you the PDF and occasional updates. Unsubscribe anytime.{" "}
+        <Link href="/privacy" className="hover:underline">Privacy Policy</Link>.
+      </p>
     </div>
   );
 }
@@ -310,7 +333,8 @@ export default function SalesTaxAccountantSite() {
         </div>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
+        <AnimatePresence>
+          {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
@@ -358,7 +382,8 @@ export default function SalesTaxAccountantSite() {
               </Button>
             </nav>
           </motion.div>
-        )}
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Hero */}
@@ -392,7 +417,7 @@ export default function SalesTaxAccountantSite() {
             <div className="grid grid-cols-3 gap-4 mt-8">
               <Stat label="Years in practice" value="14+" />
               <Stat label="States covered" value="45+" />
-              <Stat label="Avg. reverse sales/use tax refund ROI" value="3–10×" />
+              <Stat label="Refund ROI" value="3–10×" />
             </div>
           </div>
           <Card className="border-0 shadow-xl">
@@ -420,22 +445,25 @@ export default function SalesTaxAccountantSite() {
         <p className="text-slate-600 mt-2 max-w-2xl">Pick the lane you need now; add on as you grow. Every engagement includes documentation you can hand to auditors and future staff.</p>
         <div className="grid md:grid-cols-3 gap-6 mt-8">
           {SERVICES.map((s, i) => (
-            <Card
+            <a
               key={i}
-              className="hover:shadow-lg hover:border-teal-700 transition-all cursor-pointer"
+              href="#contact"
               onClick={() => track("Service Card Click", {
                 service: s.title.toLowerCase().replace(/\s+/g, "_"),
                 position: i + 1
               })}
+              className="block"
             >
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-3">
-                  <div className={`${BRAND.teal}`}>{s.icon}</div>
-                  <CardTitle className="text-base">{s.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="text-sm text-slate-600">{s.text}</CardContent>
-            </Card>
+              <Card className="h-full hover:shadow-lg hover:border-teal-700 transition-all cursor-pointer">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center gap-3">
+                    <div className={`${BRAND.teal}`}>{s.icon}</div>
+                    <CardTitle className="text-base">{s.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="text-sm text-slate-600">{s.text}</CardContent>
+              </Card>
+            </a>
           ))}
         </div>
         <div className="mt-6">
@@ -483,14 +511,7 @@ export default function SalesTaxAccountantSite() {
         <h2 className="text-2xl md:text-3xl font-bold">FAQ</h2>
         <div className="mt-6 space-y-4">
           {FAQS.map((f, i) => (
-            <Card
-              key={i}
-              className="border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => track("FAQ Click", {
-                question: f.q.substring(0, 50),
-                position: i + 1
-              })}
-            >
+            <Card key={i} className="border-0 shadow-sm">
               <CardHeader className="pb-2"><CardTitle className="text-base">{f.q}</CardTitle></CardHeader>
               <CardContent className="text-sm text-slate-600">{f.a}</CardContent>
             </Card>
@@ -505,7 +526,7 @@ export default function SalesTaxAccountantSite() {
             <h2 className="text-2xl md:text-3xl font-bold">Let&apos;s get your sales tax under control</h2>
             <p className="text-slate-600 mt-2">Tell us a bit about your situation. We&apos;ll propose a right‑sized plan—no bloat, just the work that matters.</p>
             <div className="mt-6 space-y-2 text-sm text-slate-700">
-              <div className="flex items-center gap-2"><Mail className="h-4 w-4"/> hello@salestaxaccountant.com</div>
+              <div className="flex items-center gap-2"><Mail className="h-4 w-4"/> <a href="mailto:hello@salestaxaccountant.com" className="hover:underline">hello@salestaxaccountant.com</a></div>
               <div className="flex items-start gap-2"><MessageSquare className="h-4 w-4 mt-1"/> Prefer a quick chat? Add a note in the form and we&apos;ll send a booking link.</div>
             </div>
           </div>
@@ -534,12 +555,12 @@ export default function SalesTaxAccountantSite() {
         <p className="text-slate-600 mt-2 max-w-2xl">Practical guides and updates to help you navigate sales & use tax with confidence.</p>
         <div className="grid md:grid-cols-2 gap-6 mt-6">
           <Card>
-            <CardHeader><CardTitle className="text-base">Sales Tax 101 for Online Sellers</CardTitle></CardHeader>
-            <CardContent className="text-sm text-slate-600">A beginner&apos;s guide to understanding nexus, thresholds, and registrations. <a href="#" className="text-blue-900 hover:underline" onClick={(e) => { e.preventDefault(); track("Resource Click", { resource: "sales_tax_101" }); }}>Read more</a></CardContent>
+            <CardHeader><CardTitle className="text-base">Post-Wayfair Sales Tax Nexus: Complete Guide for 2026</CardTitle></CardHeader>
+            <CardContent className="text-sm text-slate-600">Understand economic nexus thresholds, registration requirements, and compliance strategies after the Wayfair Supreme Court decision. <Link href="/blog/wayfair-decision-guide-2026" className="text-blue-900 hover:underline" onClick={() => track("Resource Click", { resource: "wayfair_decision_guide_2026" })}>Read more</Link></CardContent>
           </Card>
           <Card>
-            <CardHeader><CardTitle className="text-base">5 Common Mistakes in Sales Tax Compliance</CardTitle></CardHeader>
-            <CardContent className="text-sm text-slate-600">Avoid costly errors in multi-state taxability and filings. <a href="#" className="text-blue-900 hover:underline" onClick={(e) => { e.preventDefault(); track("Resource Click", { resource: "common_mistakes" }); }}>Read more</a></CardContent>
+            <CardHeader><CardTitle className="text-base">Sales Tax for SaaS Companies: State-by-State Taxability Guide</CardTitle></CardHeader>
+            <CardContent className="text-sm text-slate-600">Is your software taxable? Learn which states tax SaaS, how to handle exemptions, and navigate the complex world of digital goods taxation. <Link href="/blog/saas-sales-tax-guide" className="text-blue-900 hover:underline" onClick={() => track("Resource Click", { resource: "saas_sales_tax_guide" })}>Read more</Link></CardContent>
           </Card>
         </div>
         <div className="mt-6">
@@ -563,7 +584,10 @@ export default function SalesTaxAccountantSite() {
             <LogoMark className="h-6 w-6" />
             <span className="text-sm text-slate-500">© {new Date().getFullYear()} SalesTaxAccountant.com — All rights reserved.</span>
           </div>
-          <div className="text-xs text-slate-400">This site provides general information, not legal or tax advice.</div>
+          <div className="text-xs text-slate-400">
+            This site provides general information, not legal or tax advice.{" "}
+            <Link href="/privacy" className="text-xs text-slate-400 hover:underline">Privacy Policy</Link>
+          </div>
         </div>
       </footer>
     </div>
