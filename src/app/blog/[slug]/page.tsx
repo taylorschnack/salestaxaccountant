@@ -58,7 +58,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <Link
             href="/blog"
-            className="text-sm text-blue-900 hover:underline flex items-center gap-1"
+            className="text-sm text-blue-950 hover:underline flex items-center gap-1"
           >
             ← Back to blog
           </Link>
@@ -69,7 +69,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       <article className="max-w-3xl mx-auto px-4 py-16">
         {/* Meta */}
         <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600 mb-4">
-          <span className="px-3 py-1 bg-blue-50 text-blue-900 rounded-full text-xs font-medium">
+          <span className="px-3 py-1 bg-blue-50 text-blue-950 rounded-full text-xs font-medium">
             {post.category}
           </span>
           <span className="flex items-center gap-1">
@@ -104,15 +104,15 @@ export default async function BlogPostPage({ params }: PageProps) {
         </div>
 
         {/* CTA */}
-        <div className="mt-16 p-8 bg-gradient-to-br from-blue-50 to-teal-50 rounded-2xl">
-          <h3 className="text-2xl font-bold text-blue-900 mb-2">
+        <div className="mt-16 p-8 bg-slate-50 border border-slate-200 rounded-2xl">
+          <h3 className="text-2xl font-bold tracking-tight text-blue-950 mb-2">
             Need help with your sales tax situation?
           </h3>
           <p className="text-slate-600 mb-4">
             Get expert guidance on nexus, compliance, and multi-state obligations.
           </p>
-          <Button asChild className="bg-blue-900 hover:bg-teal-700">
-            <Link href="/#contact">Schedule a consultation</Link>
+          <Button asChild>
+            <Link href="/#contact">Book a consult</Link>
           </Button>
         </div>
       </article>

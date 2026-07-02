@@ -15,12 +15,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SalesTaxAccountant.com | Sales Tax Confidence for Growing Businesses",
-  description: "Practical multistate sales & use tax help for online sellers, SaaS, and retailers — nexus, taxability, registration, audits, and disclosures — delivered in plain language with audit‑ready support.",
+  description: "Practical multistate sales & use tax help for online sellers, SaaS, and retailers. Nexus, taxability, registration, audits, and disclosures in plain language with audit-ready support.",
   keywords: ["sales tax", "nexus study", "voluntary disclosure", "VDA", "sales tax registration", "audit defense", "multistate compliance"],
   robots: "index,follow",
   openGraph: {
     title: "SalesTaxAccountant.com | Sales Tax Confidence",
-    description: "Simplify multistate sales tax. From nexus and taxability to audits and disclosures, we deliver audit‑ready, plain‑language solutions.",
+    description: "Simplify multistate sales tax. From nexus and taxability to audits and disclosures, we deliver audit-ready, plain-language solutions.",
     type: "website",
     url: "https://www.salestaxaccountant.com",
     images: [
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "SalesTaxAccountant.com | Sales Tax Confidence",
-    description: "Sales tax confidence, built for audit‑ready teams.",
+    description: "Sales tax confidence, built for growing businesses.",
     images: ["/og-image.png"],
   },
   alternates: {
@@ -108,7 +108,7 @@ export default function RootLayout({
                   name: "How fast can you deliver a nexus study?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "Typical turnarounds are 1–2 weeks depending on states and data readiness. Rush options available.",
+                    text: "Typical turnarounds are 1-2 weeks depending on states and data readiness. Rush options are available.",
                   },
                 },
                 {
@@ -116,7 +116,7 @@ export default function RootLayout({
                   name: "Do you implement or resell tax engines?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "We stay vendor‑neutral. We help you choose, configure rules, and validate results without reselling software.",
+                    text: "We stay vendor-neutral. We help you choose, configure rules, and validate results without reselling software.",
                   },
                 },
                 {
@@ -124,7 +124,7 @@ export default function RootLayout({
                   name: "Can you represent us in front of the state?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "We support audits end‑to‑end and coordinate with legal counsel when formal representation is required.",
+                    text: "We support audits end-to-end and coordinate with legal counsel when formal representation is required.",
                   },
                 },
               ],

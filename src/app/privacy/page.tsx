@@ -17,18 +17,12 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Decorative gradient backdrop */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        <div className="absolute -top-24 -left-24 h-[32rem] w-[32rem] rounded-full blur-3xl opacity-10 bg-gradient-to-tr from-blue-900 to-teal-600" />
-        <div className="absolute top-1/2 -right-24 h-[28rem] w-[28rem] rounded-full blur-3xl opacity-10 bg-gradient-to-tr from-teal-700 to-blue-900" />
-      </div>
-
       {/* Header */}
-      <header className="border-b backdrop-blur bg-white/70">
+      <header className="border-b bg-white">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <Link
             href="/"
-            className="text-sm text-blue-900 hover:underline flex items-center gap-1"
+            className="text-sm text-blue-950 hover:underline flex items-center gap-1"
           >
             ← Back to home
           </Link>
@@ -36,7 +30,7 @@ export default function PrivacyPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-16 text-slate-700">
-        <h1 className="text-4xl md:text-5xl font-bold text-blue-900 leading-tight">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-blue-950 leading-tight">
           Privacy Policy
         </h1>
         <p className="mt-4 text-sm text-slate-500">Effective date: July 2, 2026</p>
@@ -116,7 +110,7 @@ export default function PrivacyPage() {
               You can ask us to access or delete the personal information you have shared with
               us, and you can unsubscribe from updates at any time. To make a request, email us
               at{" "}
-              <a href="mailto:hello@salestaxaccountant.com" className="text-blue-900 hover:underline">
+              <a href="mailto:hello@salestaxaccountant.com" className="text-blue-950 hover:underline">
                 hello@salestaxaccountant.com
               </a>
               .
@@ -128,7 +122,7 @@ export default function PrivacyPage() {
             <p className="mt-2">
               If you have any questions about this policy or our data practices, please contact
               us at{" "}
-              <a href="mailto:hello@salestaxaccountant.com" className="text-blue-900 hover:underline">
+              <a href="mailto:hello@salestaxaccountant.com" className="text-blue-950 hover:underline">
                 hello@salestaxaccountant.com
               </a>
               . We may update this policy from time to time; the effective date above reflects
