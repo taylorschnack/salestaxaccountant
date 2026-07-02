@@ -46,3 +46,6 @@ tmpclaude-*-cwd
 
 # lead magnet source files (served copy lives in public/resources)
 /lead-magnets/
+
+# client proposals and internal business documents (repo is public)
+/proposals/
