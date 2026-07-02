@@ -224,8 +224,8 @@ function LeadMagnetForm() {
       if (response.ok) {
         setSent(true);
         form.reset();
-        // Track successful lead magnet download
-        track("Lead Magnet Downloaded", {
+        // Track successful lead magnet form submission
+        track("Lead Magnet Submitted", {
           type: "nexus_checklist"
         });
       } else {
@@ -256,8 +256,20 @@ function LeadMagnetForm() {
       <p className="text-slate-600 mt-2">Download our practical checklist to see if your business has obligations in other states.</p>
 
       {sent ? (
-        <div className="mt-6 max-w-md mx-auto rounded-xl p-4 bg-teal-50 text-teal-900 text-sm border border-teal-200">
-          Thanks! Check your email for the Sales Tax Nexus Checklist PDF.
+        <div className="mt-6 max-w-md mx-auto grid gap-3">
+          <div className="rounded-xl p-4 bg-teal-50 text-teal-900 text-sm border border-teal-200">
+            Thanks! Your Sales Tax Nexus Checklist is ready.
+          </div>
+          <Button asChild className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+            <a
+              href="/resources/sales-tax-nexus-checklist.pdf"
+              download="Sales-Tax-Nexus-Checklist.pdf"
+              onClick={() => track("Lead Magnet PDF Downloaded", { type: "nexus_checklist" })}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Download the checklist (PDF)
+            </a>
+          </Button>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="mt-6 max-w-md mx-auto grid gap-3">
@@ -282,7 +294,7 @@ function LeadMagnetForm() {
       )}
 
       <p className="text-xs text-slate-500 mt-2">
-        We&apos;ll email you the PDF and occasional updates. Unsubscribe anytime.{" "}
+        We&apos;ll send occasional updates. Unsubscribe anytime.{" "}
         <Link href="/privacy" className="hover:underline">Privacy Policy</Link>.
       </p>
     </div>

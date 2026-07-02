@@ -43,3 +43,6 @@ next-env.d.ts
 # Claude Code temporary files
 tmpclaude-*-cwd
 .claude/
+
+# lead magnet source files (served copy lives in public/resources)
+/lead-magnets/
