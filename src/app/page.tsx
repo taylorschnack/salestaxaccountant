@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { track } from "@vercel/analytics";
 import {
@@ -30,12 +31,11 @@ import { Textarea } from "@/components/ui/textarea";
  * Professional sales & use tax consulting landing page with lead generation.
  */
 
-function Wordmark({ className = "text-lg" }: { className?: string }) {
+function Wordmark({ className = "text-lg", icon = 36 }: { className?: string; icon?: number }) {
   return (
-    <span className={`tracking-tight ${className}`}>
-      <span className="font-normal text-blue-950">SalesTax</span>
-      <span className="font-bold text-blue-950">Accountant</span>
-      <span className="font-normal text-slate-400">.com</span>
+    <span className={`inline-flex items-center gap-2.5 tracking-tight ${className}`}>
+      <Image src="/images/logo-icon.png" alt="" width={icon} height={icon} className="shrink-0" priority />
+      <span className="font-bold text-blue-950">salestaxaccountant.com</span>
     </span>
   );
 }
@@ -545,7 +545,7 @@ export default function SalesTaxAccountantSite() {
         <div className="max-w-6xl mx-auto px-4 py-12">
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-8">
             <div className="max-w-sm">
-              <Wordmark className="text-base" />
+              <Wordmark className="text-base" icon={28} />
               <p className="text-sm text-slate-500 mt-2">Multistate sales and use tax consulting for online sellers, SaaS companies, and retailers.</p>
             </div>
             <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-600" aria-label="Footer">

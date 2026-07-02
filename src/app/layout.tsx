@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.salestaxaccountant.com"),
   title: "SalesTaxAccountant.com | Sales Tax Confidence for Growing Businesses",
   description: "Practical multistate sales & use tax help for online sellers, SaaS, and retailers. Nexus, taxability, registration, audits, and disclosures in plain language with audit-ready support.",
   keywords: ["sales tax", "nexus study", "voluntary disclosure", "VDA", "sales tax registration", "audit defense", "multistate compliance"],
@@ -59,7 +60,7 @@ export default function RootLayout({
               "@type": "Organization",
               name: "SalesTaxAccountant.com",
               url: "https://www.salestaxaccountant.com",
-              logo: "https://www.salestaxaccountant.com/favicon.ico",
+              logo: "https://www.salestaxaccountant.com/images/logo.png",
               sameAs: ["https://www.linkedin.com/company/salestaxaccountant"],
             }),
           }}
