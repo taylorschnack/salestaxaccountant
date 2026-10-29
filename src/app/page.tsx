@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { track } from "@vercel/analytics";
 import {
+  ChevronDown,
   ChevronRight,
   Mail,
   MapPin,
@@ -46,13 +47,24 @@ const FEATURES = [
   { icon: <FileText className="h-6 w-6" />, title: "Engine-agnostic guidance", text: "Practical taxability mapping and exemption logic, whatever provider you use." }
 ];
 
+const REASONS = [
+  { value: "nexus_threshold", label: "Crossed or nearing a nexus threshold" },
+  { value: "state_notice", label: "State notice or audit" },
+  { value: "past_exposure", label: "Past exposure / voluntary disclosure" },
+  { value: "registration", label: "Registering in new states" },
+  { value: "taxability", label: "Product taxability questions" },
+  { value: "tax_engine", label: "Tax engine setup or cleanup" },
+  { value: "diligence", label: "Due diligence or fundraising" },
+  { value: "other", label: "Something else" }
+];
+
 const SERVICES = [
-  { icon: <Flag className="h-6 w-6" />, title: "Nexus & Exposure Study", text: "Economic and physical nexus by state with thresholds, dates, and a remediation plan." },
-  { icon: <Building2 className="h-6 w-6" />, title: "Registration & Onboarding", text: "State registrations, marketplace settings, and filing calendars set up correctly." },
-  { icon: <FileSpreadsheet className="h-6 w-6" />, title: "Product Taxability Matrix", text: "Taxability calls for your catalog across nexus states with notes and citations." },
-  { icon: <ShieldCheck className="h-6 w-6" />, title: "Audit Support & Sampling", text: "Prepare evidence, manage requests, sampling strategies, and negotiation support." },
-  { icon: <Calculator className="h-6 w-6" />, title: "Voluntary Disclosures (VDAs)", text: "Quantify historical exposure and guide VDA or amnesty to reduce penalties and lookback." },
-  { icon: <Layers className="h-6 w-6" />, title: "Sales Tax Systems & Controls", text: "Provider-neutral rules, exemption certificate process, and monthly close checklist." }
+  { icon: <Flag className="h-6 w-6" />, title: "Nexus & Exposure Study", text: "Economic and physical nexus by state with thresholds, dates, and a remediation plan.", reason: "nexus_threshold" },
+  { icon: <Building2 className="h-6 w-6" />, title: "Registration & Onboarding", text: "State registrations, marketplace settings, and filing calendars set up correctly.", reason: "registration" },
+  { icon: <FileSpreadsheet className="h-6 w-6" />, title: "Product Taxability Matrix", text: "Taxability calls for your catalog across nexus states with notes and citations.", reason: "taxability" },
+  { icon: <ShieldCheck className="h-6 w-6" />, title: "Audit Support & Sampling", text: "Prepare evidence, manage requests, sampling strategies, and negotiation support.", reason: "state_notice" },
+  { icon: <Calculator className="h-6 w-6" />, title: "Voluntary Disclosures (VDAs)", text: "Quantify historical exposure and guide VDA or amnesty to reduce penalties and lookback.", reason: "past_exposure" },
+  { icon: <Layers className="h-6 w-6" />, title: "Sales Tax Systems & Controls", text: "Provider-neutral rules, exemption certificate process, and monthly close checklist.", reason: "tax_engine" }
 ];
 
 const STEPS = [
@@ -69,88 +81,287 @@ const FAQS = [
   { q: "Can you represent us in front of the state?", a: "We support audits end-to-end and coordinate with legal counsel when formal representation is required." },
 ];
 
-function LeadForm() {
-  const [sent, setSent] = useState(false);
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/manbgjvk";
+const CONTACT_EMAIL = "hello@salestaxaccountant.com";
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+type SubmitFailure = "offline" | "network" | "timeout" | "rate_limited" | "invalid" | "server";
+
+type SubmitResult =
+  | { ok: true }
+  | { ok: false; kind: SubmitFailure; fieldErrors?: Record<string, string> };
+
+async function submitToFormspree(formData: FormData): Promise<SubmitResult> {
+  if (typeof navigator !== "undefined" && !navigator.onLine) {
+    return { ok: false, kind: "offline" };
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const response = await fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      body: formData,
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    });
+
+    if (response.ok) return { ok: true };
+    if (response.status === 429) return { ok: false, kind: "rate_limited" };
+    if (response.status === 422) {
+      // Formspree reports field-level problems as { errors: [{ field, message }] }; its wording is terse, so use ours
+      const data = await response.json().catch(() => null);
+      const fieldErrors: Record<string, string> = {};
+      for (const e of data?.errors ?? []) {
+        if (e?.field) fieldErrors[e.field] = e.field === "email" ? "Enter an email like name@company.com." : "Check this field and try again.";
+      }
+      return { ok: false, kind: "invalid", fieldErrors };
+    }
+    return { ok: false, kind: "server" };
+  } catch (err) {
+    const timedOut = err instanceof DOMException && err.name === "AbortError";
+    return { ok: false, kind: timedOut ? "timeout" : "network" };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function SubmitError({ kind }: { kind: SubmitFailure }) {
+  const emailLink = (
+    <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium underline underline-offset-2">
+      {CONTACT_EMAIL}
+    </a>
+  );
+  const messages: Record<SubmitFailure, React.ReactNode> = {
+    offline: <>You appear to be offline. Reconnect and send again; your message is still here.</>,
+    network: <>Your message couldn&apos;t reach the server. Check your connection and send again, or email {emailLink}.</>,
+    timeout: <>Sending is taking longer than it should. Try once more, or email {emailLink}.</>,
+    rate_limited: <>Too many attempts in a short time. Wait a minute and send again, or email {emailLink}.</>,
+    invalid: <>A few details need another look. Check the fields marked above.</>,
+    server: <>Your message didn&apos;t go through on our side. Send again, or email {emailLink}. Nothing you typed was lost.</>,
+  };
+  return (
+    <div role="alert" className="rounded-lg p-4 bg-red-50 text-red-900 text-sm border border-red-200">
+      {messages[kind]}
+    </div>
+  );
+}
+
+const FIELD_CLASS = "h-11 bg-white";
+const LABEL_CLASS = "block text-sm font-medium text-slate-900 mb-1.5";
+const FIELD_ERROR_CLASS = "mt-1.5 text-sm text-red-700";
+
+function validateLead(formData: FormData) {
+  const errors: Record<string, string> = {};
+  const value = (key: string) => String(formData.get(key) ?? "").trim();
+
+  if (!value("name")) errors.name = "Enter your name.";
+  if (!value("email")) errors.email = "Enter your work email.";
+  else if (!EMAIL_PATTERN.test(value("email"))) errors.email = "Enter an email like name@company.com.";
+  if (!value("reason")) errors.reason = "Choose what's prompting your inquiry.";
+  if (!value("message")) errors.message = "Add a sentence or two about your situation.";
+
+  return errors;
+}
+
+function LeadForm({ reason, onReasonChange }: { reason: string; onReasonChange: (value: string) => void }) {
+  const [sentTo, setSentTo] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<SubmitFailure | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const successRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (sentTo) successRef.current?.focus();
+  }, [sentTo]);
+
+  const clearFieldError = (field: string) => {
+    if (fieldErrors[field]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
+    if (isSubmitting) return;
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+    const errors = validateLead(formData);
 
-    // Track form submission attempt
+    setSubmitError(null);
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      const firstInvalid = form.querySelector<HTMLElement>(`[name="${Object.keys(errors)[0]}"]`);
+      firstInvalid?.focus();
+      return;
+    }
+
+    const reasonLabel = REASONS.find((r) => r.value === formData.get("reason"))?.label ?? "General inquiry";
+    formData.set("reason", reasonLabel);
+    formData.set("_subject", `Consult request: ${reasonLabel}`);
+
+    setIsSubmitting(true);
     track("Lead Form Started", {
       formType: "consultation",
-      location: "page"
+      location: "page",
+      reason: String(reason || "none")
     });
 
-    try {
-      const response = await fetch("https://formspree.io/f/manbgjvk", {
-        method: "POST",
-        body: formData,
-        headers: {
-          Accept: "application/json",
-        },
-      });
+    const result = await submitToFormspree(formData);
+    setIsSubmitting(false);
 
-      if (response.ok) {
-        setSent(true);
-        form.reset();
-        // Track successful submission
-        track("Lead Form Submitted", {
-          formType: "consultation",
-          location: "page"
-        });
-      } else {
-        setError("Something went wrong sending your message. Please try again, or email us at hello@salestaxaccountant.com.");
-        track("Lead Form Error", {
-          formType: "consultation",
-          error: "submission_failed"
-        });
-      }
-    } catch {
-      setError("Something went wrong sending your message. Please try again, or email us at hello@salestaxaccountant.com.");
+    if (result.ok) {
+      setSentTo(String(formData.get("email")));
+      form.reset();
+      onReasonChange("");
+      track("Lead Form Submitted", {
+        formType: "consultation",
+        location: "page"
+      });
+    } else {
+      setSubmitError(result.kind);
+      if (result.fieldErrors) setFieldErrors(result.fieldErrors);
       track("Lead Form Error", {
         formType: "consultation",
-        error: "network_error"
+        error: result.kind
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
+
+  const describedBy = (field: string, hint?: boolean) =>
+    [hint ? `lead-${field}-hint` : null, fieldErrors[field] ? `lead-${field}-error` : null].filter(Boolean).join(" ") || undefined;
 
   return (
     <div className="rounded-2xl bg-white p-6 md:p-8 text-slate-900">
       <h3 className="text-lg font-semibold">Book a consult</h3>
-      <div className="mt-4 grid gap-3">
-        {sent ? (
-          <div className="rounded-xl p-4 bg-blue-50 text-blue-950 text-sm border border-blue-200">
-            Thanks! We just received your note and will reply within one business day.
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
-            <Input type="text" name="name" placeholder="Your Name" required />
-            <Input type="email" name="email" placeholder="Your Email" required />
-            <Input type="text" name="company" placeholder="Your Company Name" required />
-            <Textarea name="message" placeholder="Tell us about your sales tax situation" required />
-            {error && (
-              <div className="rounded-xl p-4 bg-red-50 text-red-900 text-sm border border-red-200">
-                {error}
-              </div>
-            )}
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Sending..." : "Send message"}
+      <div className="mt-5 grid gap-4">
+        {sentTo ? (
+          <>
+            <div
+              ref={successRef}
+              tabIndex={-1}
+              role="status"
+              className="rounded-lg p-5 bg-blue-50 text-blue-950 border border-blue-200 outline-none"
+            >
+              <p className="font-semibold">Request received.</p>
+              <p className="text-sm mt-1.5 [overflow-wrap:anywhere]">
+                Expect a reply at {sentTo} within one business day. Facing a notice with a response deadline? Email{" "}
+                <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium underline underline-offset-2">{CONTACT_EMAIL}</a>{" "}
+                with the date in the subject line.
+              </p>
+            </div>
+            <Button variant="outline" className="h-11 w-full sm:w-auto sm:justify-self-start" onClick={() => setSentTo(null)}>
+              Send another message
             </Button>
+          </>
+        ) : (
+          <form onSubmit={handleSubmit} noValidate className="grid gap-5">
+            <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+
+            <div>
+              <label htmlFor="lead-name" className={LABEL_CLASS}>Name</label>
+              <Input
+                id="lead-name"
+                name="name"
+                autoComplete="name"
+                maxLength={100}
+                className={FIELD_CLASS}
+                aria-invalid={!!fieldErrors.name}
+                aria-describedby={describedBy("name")}
+                onChange={() => clearFieldError("name")}
+              />
+              {fieldErrors.name && <p id="lead-name-error" className={FIELD_ERROR_CLASS}>{fieldErrors.name}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="lead-email" className={LABEL_CLASS}>Work email</label>
+              <Input
+                id="lead-email"
+                name="email"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                maxLength={254}
+                className={FIELD_CLASS}
+                aria-invalid={!!fieldErrors.email}
+                aria-describedby={describedBy("email")}
+                onChange={() => clearFieldError("email")}
+              />
+              {fieldErrors.email && <p id="lead-email-error" className={FIELD_ERROR_CLASS}>{fieldErrors.email}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="lead-company" className={LABEL_CLASS}>
+                Company <span className="font-normal text-slate-500">(optional)</span>
+              </label>
+              <Input
+                id="lead-company"
+                name="company"
+                autoComplete="organization"
+                maxLength={120}
+                className={FIELD_CLASS}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="lead-reason" className={LABEL_CLASS}>What&apos;s prompting this?</label>
+              <div className="relative">
+                <select
+                  id="lead-reason"
+                  name="reason"
+                  value={reason}
+                  onChange={(e) => { onReasonChange(e.target.value); clearFieldError("reason"); }}
+                  aria-invalid={!!fieldErrors.reason}
+                  aria-describedby={describedBy("reason")}
+                  className={`h-11 w-full appearance-none rounded-md border border-input bg-white pl-3 pr-10 text-base shadow-xs outline-none transition-[color,box-shadow] md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:border-destructive aria-invalid:ring-destructive/20 ${reason ? "text-slate-900" : "text-muted-foreground"}`}
+                >
+                  <option value="">Choose one</option>
+                  {REASONS.map((r) => (
+                    <option key={r.value} value={r.value} className="text-slate-900">{r.label}</option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" aria-hidden="true" />
+              </div>
+              {fieldErrors.reason && <p id="lead-reason-error" className={FIELD_ERROR_CLASS}>{fieldErrors.reason}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="lead-message" className={LABEL_CLASS}>What&apos;s going on?</label>
+              <Textarea
+                id="lead-message"
+                name="message"
+                rows={4}
+                maxLength={4000}
+                className="min-h-28 bg-white"
+                aria-invalid={!!fieldErrors.message}
+                aria-describedby={describedBy("message", true)}
+                onChange={() => clearFieldError("message")}
+              />
+              <p id="lead-message-hint" className="mt-1.5 text-sm text-slate-600">
+                States involved, any deadlines, and the tax engine you use, if any.
+              </p>
+              {fieldErrors.message && <p id="lead-message-error" className={FIELD_ERROR_CLASS}>{fieldErrors.message}</p>}
+            </div>
+
+            {submitError && <SubmitError kind={submitError} />}
+
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <Button type="submit" className="h-11 w-full px-6 sm:w-auto" disabled={isSubmitting}>
+                {isSubmitting ? "Sending…" : "Request a consult"}
+              </Button>
+              <p className="text-sm text-slate-600">Replies within one business day.</p>
+            </div>
           </form>
         )}
         <p className="text-xs text-slate-500">
           We never share your info.{" "}
-          <Link href="/privacy" className="hover:underline">Privacy Policy</Link>.
+          <Link href="/privacy" className="underline-offset-2 hover:underline">Privacy Policy</Link>.
         </p>
       </div>
     </div>
@@ -160,55 +371,50 @@ function LeadForm() {
 function LeadMagnetForm() {
   const [sent, setSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<SubmitFailure | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
+    if (isSubmitting) return;
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+    const email = String(formData.get("email") ?? "").trim();
+
+    setSubmitError(null);
+    if (!EMAIL_PATTERN.test(email)) {
+      setEmailError(email ? "Enter an email like name@company.com." : "Enter your email to get the checklist.");
+      form.querySelector<HTMLInputElement>('[name="email"]')?.focus();
+      return;
+    }
+    setEmailError(null);
 
     // Add a marker to identify this as a lead magnet request
     formData.append("message", "Lead Magnet Request: Sales Tax Nexus Checklist");
+    formData.set("_subject", "Checklist download: Sales Tax Nexus Checklist");
 
-    // Track lead magnet request
+    setIsSubmitting(true);
     track("Lead Magnet Started", {
       type: "nexus_checklist"
     });
 
-    try {
-      const response = await fetch("https://formspree.io/f/manbgjvk", {
-        method: "POST",
-        body: formData,
-        headers: {
-          Accept: "application/json",
-        },
-      });
+    const result = await submitToFormspree(formData);
+    setIsSubmitting(false);
 
-      if (response.ok) {
-        setSent(true);
-        form.reset();
-        // Track successful lead magnet form submission
-        track("Lead Magnet Submitted", {
-          type: "nexus_checklist"
-        });
-      } else {
-        setError("Something went wrong sending your message. Please try again, or email us at hello@salestaxaccountant.com.");
-        track("Lead Magnet Error", {
-          type: "nexus_checklist",
-          error: "submission_failed"
-        });
-      }
-    } catch {
-      setError("Something went wrong sending your message. Please try again, or email us at hello@salestaxaccountant.com.");
+    if (result.ok) {
+      setSent(true);
+      form.reset();
+      track("Lead Magnet Submitted", {
+        type: "nexus_checklist"
+      });
+    } else {
+      if (result.fieldErrors?.email) setEmailError(result.fieldErrors.email);
+      setSubmitError(result.kind);
       track("Lead Magnet Error", {
         type: "nexus_checklist",
-        error: "network_error"
+        error: result.kind
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -237,21 +443,26 @@ function LeadMagnetForm() {
           </Button>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="mt-6 max-w-md mx-auto grid gap-3">
+        <form onSubmit={handleSubmit} noValidate className="mt-6 max-w-md mx-auto grid gap-3 text-left">
           <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
-          <Input
-            type="email"
-            name="email"
-            placeholder="Your email"
-            aria-label="Email"
-            required
-          />
-          {error && (
-            <div className="rounded-xl p-4 bg-red-50 text-red-900 text-sm border border-red-200 text-left">
-              {error}
-            </div>
-          )}
-          <Button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white" disabled={isSubmitting}>
+          <div>
+            <Input
+              type="email"
+              name="email"
+              inputMode="email"
+              autoComplete="email"
+              maxLength={254}
+              placeholder="Your email"
+              aria-label="Email"
+              className="h-11"
+              aria-invalid={!!emailError}
+              aria-describedby={emailError ? "magnet-email-error" : undefined}
+              onChange={() => setEmailError(null)}
+            />
+            {emailError && <p id="magnet-email-error" className="mt-1.5 text-sm text-red-700">{emailError}</p>}
+          </div>
+          {submitError && <SubmitError kind={submitError} />}
+          <Button type="submit" className="h-11 w-full bg-amber-600 hover:bg-amber-700 text-white" disabled={isSubmitting}>
             <Download className="mr-2 h-4 w-4" />
             {isSubmitting ? "Sending..." : "Get the free checklist"}
           </Button>
@@ -268,6 +479,7 @@ function LeadMagnetForm() {
 
 export default function SalesTaxAccountantSite() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [leadReason, setLeadReason] = useState("");
   const prefersReducedMotion = useReducedMotion();
 
   return (
@@ -414,10 +626,13 @@ export default function SalesTaxAccountantSite() {
             <a
               key={i}
               href="#contact"
-              onClick={() => track("Service Card Click", {
-                service: s.title.toLowerCase().replace(/\s+/g, "_"),
-                position: i + 1
-              })}
+              onClick={() => {
+                setLeadReason(s.reason);
+                track("Service Card Click", {
+                  service: s.title.toLowerCase().replace(/\s+/g, "_"),
+                  position: i + 1
+                });
+              }}
               className="group flex items-start gap-4 border-t border-slate-200 py-6"
             >
               <div className="mt-0.5 text-blue-950">{s.icon}</div>
@@ -526,7 +741,7 @@ export default function SalesTaxAccountantSite() {
       </section>
 
       {/* Contact */}
-      <section id="contact" className="bg-blue-950 text-white">
+      <section id="contact" className="scroll-mt-20 bg-blue-950 text-white">
         <div className="max-w-6xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-start">
           <div>
             <h2 className="text-3xl font-bold tracking-tight">Let&apos;s get your sales tax under control</h2>
@@ -536,7 +751,7 @@ export default function SalesTaxAccountantSite() {
               <div className="flex items-start gap-2"><MessageSquare className="h-4 w-4 mt-1" /> Prefer a quick chat? Add a note in the form and we&apos;ll send a booking link.</div>
             </div>
           </div>
-          <LeadForm />
+          <LeadForm reason={leadReason} onReasonChange={setLeadReason} />
         </div>
       </section>
 
