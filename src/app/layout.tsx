@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { FAQS } from "@/lib/faqs";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
   robots: "index,follow",
   openGraph: {
     title: "SalesTaxAccountant.com | Sales Tax Confidence",
-    description: "Simplify multistate sales tax. From nexus and taxability to audits and disclosures, we deliver audit-ready, plain-language solutions.",
+    description: "Simplify multistate sales tax. Nexus, taxability, audits, and disclosures, handled directly by one senior specialist with audit-ready, plain-language documentation.",
     type: "website",
     url: "https://www.salestaxaccountant.com",
     images: [
@@ -103,32 +104,11 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "FAQPage",
-              mainEntity: [
-                {
-                  "@type": "Question",
-                  name: "How fast can you deliver a nexus study?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Typical turnarounds are 1-2 weeks depending on states and data readiness. Rush options are available.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "Do you implement or resell tax engines?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "We stay vendor-neutral. We help you choose, configure rules, and validate results without reselling software.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "Can you represent us in front of the state?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "We support audits end-to-end and coordinate with legal counsel when formal representation is required.",
-                  },
-                },
-              ],
+              mainEntity: FAQS.map((f) => ({
+                "@type": "Question",
+                name: f.q,
+                acceptedAnswer: { "@type": "Answer", text: f.a },
+              })),
             }),
           }}
         />
