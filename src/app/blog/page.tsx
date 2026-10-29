@@ -86,7 +86,7 @@ export default function BlogPage() {
             Need personalized guidance?
           </h2>
           <p className="text-blue-100 mb-6">
-            We can help you navigate complex sales tax situations with confidence.
+            Work directly with a senior specialist on nexus, audits, and multistate compliance.
           </p>
           <Button asChild className="bg-white text-blue-950 hover:bg-blue-50">
             <Link href="/#contact">Book a consult</Link>
