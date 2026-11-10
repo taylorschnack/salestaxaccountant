@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   robots: "index,follow",
   openGraph: {
     title: "SalesTaxAccountant.com | Sales Tax Confidence",
-    description: "Simplify multistate sales tax. Nexus, taxability, audits, and disclosures, handled directly by one senior specialist with audit-ready, plain-language documentation.",
+    description: "Simplify multistate sales tax. From nexus and taxability to audits and disclosures, I deliver audit-ready, plain-language solutions.",
     type: "website",
     url: "https://www.salestaxaccountant.com",
     images: [

@@ -6,7 +6,7 @@ Controllers, CFOs, and finance leads at growth-stage, multistate companies: e-co
 
 ## Product Purpose
 
-The marketing site for a solo sales and use tax specialist (14+ years in practice). Its one job is to turn qualified finance visitors into consult bookings through the contact form. The blog and the nexus checklist exist to build credibility and catch visitors who aren't ready yet; they are secondary to the consult.
+The marketing site for a solo sales and use tax specialist (15 years of sales tax experience). Its one job is to turn qualified finance visitors into consult bookings through the contact form. The blog and the nexus checklist exist to build credibility and catch visitors who aren't ready yet; they are secondary to the consult.
 
 Success: a controller lands from search or a referral, sees within seconds that this person handles their exact problem, trusts the expertise, and books a consult.
 
