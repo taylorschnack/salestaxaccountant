@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { FAQS } from "@/lib/faqs";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -103,32 +104,11 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "FAQPage",
-              mainEntity: [
-                {
-                  "@type": "Question",
-                  name: "How fast can you deliver a nexus study?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "A nexus and taxability study typically takes 2-3 weeks once I have complete data, and an exposure estimate adds another 2-3 weeks. Timing depends on the number of states and data readiness.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "Do you implement or resell tax engines?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "I stay vendor-neutral. I help you choose, configure rules, and validate results without reselling software.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "Can you represent us in front of the state?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "I support audits end-to-end and coordinate with legal counsel when formal representation is required.",
-                  },
-                },
-              ],
+              mainEntity: FAQS.map((f) => ({
+                "@type": "Question",
+                name: f.q,
+                acceptedAnswer: { "@type": "Answer", text: f.a },
+              })),
             }),
           }}
         />

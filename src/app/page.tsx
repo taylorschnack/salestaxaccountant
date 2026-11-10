@@ -26,6 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { FAQS } from "@/lib/faqs";
 
 /**
  * SalesTaxAccountant.com
@@ -75,11 +76,6 @@ const STEPS = [
   { title: "Support", text: "Ongoing advisory or audit help as your footprint evolves." }
 ];
 
-const FAQS = [
-  { q: "How fast can you deliver a nexus study?", a: "A nexus and taxability study typically takes 2-3 weeks once I have complete data, and an exposure estimate adds another 2-3 weeks. Timing depends on the number of states and data readiness." },
-  { q: "Do you implement or resell tax engines?", a: "I stay vendor-neutral. I help you choose, configure rules, and validate results without reselling software." },
-  { q: "Can you represent us in front of the state?", a: "I support audits end-to-end and coordinate with legal counsel when formal representation is required." },
-];
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/manbgjvk";
 const CONTACT_EMAIL = "hello@salestaxaccountant.com";
@@ -579,7 +575,7 @@ export default function SalesTaxAccountantSite() {
               Sales tax confidence, built for growing businesses.
             </motion.h1>
             <p className="mt-5 text-lg text-slate-600 max-w-xl">
-              Nexus, taxability, registrations, audits, and disclosures for online sellers, SaaS companies, and retailers. Plain language, audit-ready documentation.
+              Nexus, taxability, registrations, audits, and disclosures for online sellers, SaaS companies, and retailers. You work with me directly: plain language, audit-ready documentation.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -649,7 +645,7 @@ export default function SalesTaxAccountantSite() {
       <section id="approach" className="bg-slate-50 border-y border-slate-200">
         <div className="max-w-6xl mx-auto px-4 py-20">
           <h2 className="text-3xl font-bold tracking-tight">How I work</h2>
-          <p className="text-slate-600 mt-3 max-w-2xl">From first call to ongoing support, every engagement follows the same five steps.</p>
+          <p className="text-slate-600 mt-3 max-w-2xl">From first call to ongoing support, every engagement follows the same five steps, and I handle each one myself.</p>
           <div className="grid lg:grid-cols-5 gap-y-10 lg:gap-x-8 mt-12">
             {STEPS.map((step, i) => (
               <motion.div
@@ -745,7 +741,7 @@ export default function SalesTaxAccountantSite() {
         <div className="max-w-6xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-start">
           <div>
             <h2 className="text-3xl font-bold tracking-tight">Let&apos;s get your sales tax under control</h2>
-            <p className="text-blue-100 mt-3">Tell me a bit about your situation. I&apos;ll propose a right-sized plan: no bloat, just the work that matters.</p>
+            <p className="text-blue-100 mt-3">Tell me a bit about your situation. I&apos;ll propose a right-sized plan: no bloat, just the work that matters. You work with me directly, from the first call to the final memo.</p>
             <div className="mt-8 space-y-3 text-sm text-blue-100">
               <div className="flex items-center gap-2"><Mail className="h-4 w-4" /> <a href="mailto:hello@salestaxaccountant.com" className="hover:underline">hello@salestaxaccountant.com</a></div>
               <div className="flex items-start gap-2"><MessageSquare className="h-4 w-4 mt-1" /> Prefer a quick chat? Add a note in the form and I&apos;ll send a booking link.</div>
