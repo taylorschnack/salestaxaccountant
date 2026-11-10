@@ -76,9 +76,9 @@ const STEPS = [
 ];
 
 const FAQS = [
-  { q: "How fast can you deliver a nexus study?", a: "Typical turnarounds are 1-2 weeks depending on states and data readiness. Rush options are available." },
-  { q: "Do you implement or resell tax engines?", a: "We stay vendor-neutral. We help you choose, configure rules, and validate results without reselling software." },
-  { q: "Can you represent us in front of the state?", a: "We support audits end-to-end and coordinate with legal counsel when formal representation is required." },
+  { q: "How fast can you deliver a nexus study?", a: "A nexus and taxability study typically takes 2-3 weeks once I have complete data, and an exposure estimate adds another 2-3 weeks. Timing depends on the number of states and data readiness." },
+  { q: "Do you implement or resell tax engines?", a: "I stay vendor-neutral. I help you choose, configure rules, and validate results without reselling software." },
+  { q: "Can you represent us in front of the state?", a: "I support audits end-to-end and coordinate with legal counsel when formal representation is required." },
 ];
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/manbgjvk";
@@ -139,7 +139,7 @@ function SubmitError({ kind }: { kind: SubmitFailure }) {
     timeout: <>Sending is taking longer than it should. Try once more, or email {emailLink}.</>,
     rate_limited: <>Too many attempts in a short time. Wait a minute and send again, or email {emailLink}.</>,
     invalid: <>A few details need another look. Check the fields marked above.</>,
-    server: <>Your message didn&apos;t go through on our side. Send again, or email {emailLink}. Nothing you typed was lost.</>,
+    server: <>Your message didn&apos;t go through on my end. Send again, or email {emailLink}. Nothing you typed was lost.</>,
   };
   return (
     <div role="alert" className="rounded-lg p-4 bg-red-50 text-red-900 text-sm border border-red-200">
@@ -251,7 +251,7 @@ function LeadForm({ reason, onReasonChange }: { reason: string; onReasonChange: 
             >
               <p className="font-semibold">Request received.</p>
               <p className="text-sm mt-1.5 [overflow-wrap:anywhere]">
-                Expect a reply at {sentTo} within one business day. Facing a notice with a response deadline? Email{" "}
+                I&apos;ll reply to {sentTo} within one business day. Facing a notice with a response deadline? Email{" "}
                 <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium underline underline-offset-2">{CONTACT_EMAIL}</a>{" "}
                 with the date in the subject line.
               </p>
@@ -355,12 +355,12 @@ function LeadForm({ reason, onReasonChange }: { reason: string; onReasonChange: 
               <Button type="submit" className="h-11 w-full px-6 sm:w-auto" disabled={isSubmitting}>
                 {isSubmitting ? "Sending…" : "Request a consult"}
               </Button>
-              <p className="text-sm text-slate-600">Replies within one business day.</p>
+              <p className="text-sm text-slate-600">I reply within one business day.</p>
             </div>
           </form>
         )}
         <p className="text-xs text-slate-500">
-          We never share your info.{" "}
+          I never share your info.{" "}
           <Link href="/privacy" className="underline-offset-2 hover:underline">Privacy Policy</Link>.
         </p>
       </div>
@@ -424,7 +424,7 @@ function LeadMagnetForm() {
       <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 mt-4">
         Free guide: Sales Tax Nexus Checklist
       </h2>
-      <p className="text-slate-600 mt-3 max-w-xl mx-auto">Download our practical checklist to see if your business has obligations in other states.</p>
+      <p className="text-slate-600 mt-3 max-w-xl mx-auto">Download the practical checklist to see if your business has obligations in other states.</p>
 
       {sent ? (
         <div className="mt-6 max-w-md mx-auto grid gap-3">
@@ -470,7 +470,7 @@ function LeadMagnetForm() {
       )}
 
       <p className="text-xs text-slate-500 mt-3">
-        We&apos;ll send occasional updates. Unsubscribe anytime.{" "}
+        I&apos;ll send occasional updates. Unsubscribe anytime.{" "}
         <Link href="/privacy" className="hover:underline">Privacy Policy</Link>.
       </p>
     </div>
@@ -494,7 +494,7 @@ export default function SalesTaxAccountantSite() {
           <nav className="hidden md:flex items-center gap-6 text-sm" aria-label="Primary">
             <a href="#services" className="hover:text-slate-900 text-slate-600">Services</a>
             <a href="#approach" className="hover:text-slate-900 text-slate-600">Approach</a>
-            <a href="#industries" className="hover:text-slate-900 text-slate-600">Who we serve</a>
+            <a href="#industries" className="hover:text-slate-900 text-slate-600">Who I serve</a>
             <a href="#faq" className="hover:text-slate-900 text-slate-600">FAQ</a>
             <a href="#contact" className="hover:text-slate-900 text-slate-600">Contact</a>
           </nav>
@@ -542,7 +542,7 @@ export default function SalesTaxAccountantSite() {
                 className="px-3 py-2 hover:bg-slate-100 rounded-lg text-slate-700"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Who we serve
+                Who I serve
               </a>
               <a
                 href="#faq"
@@ -589,10 +589,10 @@ export default function SalesTaxAccountantSite() {
                 <a href="#services" onClick={() => track("CTA Click", { button: "explore_services", location: "hero" })}>Explore services</a>
               </Button>
             </div>
-            <div className="mt-10 flex gap-12">
+            <div className="mt-10 flex flex-wrap gap-x-12 gap-y-6">
               <div>
-                <div className="text-3xl font-semibold text-blue-950">14+</div>
-                <div className="text-sm text-slate-600 mt-1">Years in practice</div>
+                <div className="text-3xl font-semibold text-blue-950">15</div>
+                <div className="text-sm text-slate-600 mt-1">Years of sales tax experience</div>
               </div>
               <div>
                 <div className="text-3xl font-semibold text-blue-950">45+</div>
@@ -601,7 +601,7 @@ export default function SalesTaxAccountantSite() {
             </div>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8">
-            <h2 className="text-lg font-semibold">What we deliver</h2>
+            <h2 className="text-lg font-semibold">What I deliver</h2>
             <div className="mt-6 grid gap-6">
               {FEATURES.map((f, i) => (
                 <div key={i} className="flex items-start gap-3">
@@ -648,7 +648,7 @@ export default function SalesTaxAccountantSite() {
       {/* Approach */}
       <section id="approach" className="bg-slate-50 border-y border-slate-200">
         <div className="max-w-6xl mx-auto px-4 py-20">
-          <h2 className="text-3xl font-bold tracking-tight">How we work</h2>
+          <h2 className="text-3xl font-bold tracking-tight">How I work</h2>
           <p className="text-slate-600 mt-3 max-w-2xl">From first call to ongoing support, every engagement follows the same five steps.</p>
           <div className="grid lg:grid-cols-5 gap-y-10 lg:gap-x-8 mt-12">
             {STEPS.map((step, i) => (
@@ -677,7 +677,7 @@ export default function SalesTaxAccountantSite() {
 
       {/* Industries */}
       <section id="industries" className="max-w-6xl mx-auto px-4 pt-20 pb-4">
-        <h2 className="text-3xl font-bold tracking-tight">Who we serve</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Who I serve</h2>
         <p className="text-lg text-slate-600 mt-3 max-w-3xl">
           Fast-growing, multistate companies: e-commerce and marketplace sellers, SaaS and software
           companies, manufacturers and wholesalers, professional services firms, and multi-location
@@ -745,10 +745,10 @@ export default function SalesTaxAccountantSite() {
         <div className="max-w-6xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-start">
           <div>
             <h2 className="text-3xl font-bold tracking-tight">Let&apos;s get your sales tax under control</h2>
-            <p className="text-blue-100 mt-3">Tell us a bit about your situation. We&apos;ll propose a right-sized plan: no bloat, just the work that matters.</p>
+            <p className="text-blue-100 mt-3">Tell me a bit about your situation. I&apos;ll propose a right-sized plan: no bloat, just the work that matters.</p>
             <div className="mt-8 space-y-3 text-sm text-blue-100">
               <div className="flex items-center gap-2"><Mail className="h-4 w-4" /> <a href="mailto:hello@salestaxaccountant.com" className="hover:underline">hello@salestaxaccountant.com</a></div>
-              <div className="flex items-start gap-2"><MessageSquare className="h-4 w-4 mt-1" /> Prefer a quick chat? Add a note in the form and we&apos;ll send a booking link.</div>
+              <div className="flex items-start gap-2"><MessageSquare className="h-4 w-4 mt-1" /> Prefer a quick chat? Add a note in the form and I&apos;ll send a booking link.</div>
             </div>
           </div>
           <LeadForm reason={leadReason} onReasonChange={setLeadReason} />
