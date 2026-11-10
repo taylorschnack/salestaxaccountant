@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   robots: "index,follow",
   openGraph: {
     title: "SalesTaxAccountant.com | Sales Tax Confidence",
-    description: "Simplify multistate sales tax. From nexus and taxability to audits and disclosures, we deliver audit-ready, plain-language solutions.",
+    description: "Simplify multistate sales tax. From nexus and taxability to audits and disclosures, I deliver audit-ready, plain-language solutions.",
     type: "website",
     url: "https://www.salestaxaccountant.com",
     images: [
@@ -109,7 +109,7 @@ export default function RootLayout({
                   name: "How fast can you deliver a nexus study?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "Typical turnarounds are 1-2 weeks depending on states and data readiness. Rush options are available.",
+                    text: "A nexus and taxability study typically takes 2-3 weeks once I have complete data, and an exposure estimate adds another 2-3 weeks. Timing depends on the number of states and data readiness.",
                   },
                 },
                 {
@@ -117,7 +117,7 @@ export default function RootLayout({
                   name: "Do you implement or resell tax engines?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "We stay vendor-neutral. We help you choose, configure rules, and validate results without reselling software.",
+                    text: "I stay vendor-neutral. I help you choose, configure rules, and validate results without reselling software.",
                   },
                 },
                 {
@@ -125,7 +125,7 @@ export default function RootLayout({
                   name: "Can you represent us in front of the state?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "We support audits end-to-end and coordinate with legal counsel when formal representation is required.",
+                    text: "I support audits end-to-end and coordinate with legal counsel when formal representation is required.",
                   },
                 },
               ],
